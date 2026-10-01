@@ -18,6 +18,18 @@ var MEASURES=[
   label:'UCSD predicted admit rate (from GPA)',
   axis:'Predicted UCSD admit rate (%)',
   desc:'The admit rate predicted for the school from its mean UCSD-applicant GPA by the fit described under “UCSD admit rate minus predicted”.'},
+ {id:'ucsd_logodds', adv:false, grp:'ucsd', unit:'lo', dec:2, y0:1994, y1:2032, skip:[],
+  label:'UCSD log-odds of admission',
+  axis:'UCSD admission, log-odds: ln(admits ÷ denials)',
+  desc:'The natural log of the school’s admits divided by its denials at UCSD, with 0.5 added to each count. 0 means even odds (a 50% admit rate); +1 means odds of e, about 73%; −1 about 27%. Shown for schools with at least 10 applicants. In a period, computed from the pooled counts.'},
+ {id:'ucsd_lor_year', adv:false, grp:'ucsd', unit:'lor', dec:2, y0:1994, y1:2032, skip:[],
+  label:'UCSD log odds ratio vs all applicants that year',
+  axis:'Log odds ratio of UCSD admission vs all CA public-school applicants',
+  desc:'The school’s log-odds of admission minus the log-odds for all California public-school applicants to UCSD in the same year (or period). 0 means the school’s odds equal the year’s overall odds; +0.69 means twice the odds, −0.69 half. Removes the year’s overall selectivity. Schools with at least 10 applicants.'},
+ {id:'ucsd_lor_pred', adv:false, grp:'ucsd', unit:'lor', dec:2, y0:1994, y1:2032, skip:[],
+  label:'UCSD log odds ratio vs predicted (from GPA)',
+  axis:'Log odds ratio of UCSD admission vs the GPA-predicted rate',
+  desc:'The school’s log-odds of admission minus the log-odds of the admit rate predicted from its mean applicant GPA (the same fit as “admit rate minus predicted”). The odds-ratio form of that measure: +0.69 means the school’s odds were twice what its GPA predicted. Schools with at least 10 applicants.'},
  {id:'ucsd_yield', adv:false, grp:'ucsd', unit:'pct', dec:1, y0:1994, y1:2032, skip:[],
   label:'UCSD yield',
   axis:'UCSD yield: enrollees ÷ admits (%)',
@@ -129,7 +141,7 @@ var MEASURES=[
   desc:'San Diego and Imperial County schools only: the number of years in 1999–2004 in which the 4% figure exceeded the admits predicted from GPA. Fixed.'}
 ];
 var MIDX={}; MEASURES.forEach(function(m,k){MIDX[m.id]=k;});
-var DELTA_IDS=['ucsd_admit','ucsd_adv','ucsd_app_gpa','ucsd_yield','oth_admit','ucsd_share','apps_per100'];
+var DELTA_IDS=['ucsd_admit','ucsd_logodds','ucsd_lor_year','ucsd_adv','ucsd_app_gpa','ucsd_yield','oth_admit','ucsd_share','apps_per100'];
 var N_ADV=MEASURES.filter(function(m){return m.adv;}).length;
 
 var FAMS=[
@@ -141,14 +153,14 @@ var FAMS=[
 ];
 var CTX_FAMS=[{k:'geo',  label:'Location'},
               {k:'need', label:'Student characteristics'}];
-var MEASURE_ORDER=['ucsd_admit','ucsd_adv','ucsd_adv2','ucsd_exp','ucsd_yield','ucsd_apps','ucsd_adm',
+var MEASURE_ORDER=['ucsd_admit','ucsd_logodds','ucsd_lor_year','ucsd_adv','ucsd_lor_pred','ucsd_adv2','ucsd_exp','ucsd_yield','ucsd_apps','ucsd_adm',
  'ucsd_app_gpa','ucsd_adm_gpa','gpa_prem','uc_app_gpa',
  'oth_admit','ucsd_share','apps_per100',
  'caaspp','star','cahsee',
  'quota','apps_per_quota','quota_bind',
  'local','county_cat','dgroup','dband','dist','prof_terc','bind_years',
  'ctx_upp','ctx_lcff','ctx_urg','ctx_size'];
-var FAM_OF={ucsd_admit:'ucsd',ucsd_adv:'ucsd',ucsd_adv2:'ucsd',ucsd_exp:'ucsd',ucsd_yield:'ucsd',ucsd_apps:'ucsd',ucsd_adm:'ucsd',
+var FAM_OF={ucsd_admit:'ucsd',ucsd_logodds:'ucsd',ucsd_lor_year:'ucsd',ucsd_lor_pred:'ucsd',ucsd_adv:'ucsd',ucsd_adv2:'ucsd',ucsd_exp:'ucsd',ucsd_yield:'ucsd',ucsd_apps:'ucsd',ucsd_adm:'ucsd',
  ucsd_app_gpa:'gpa',ucsd_adm_gpa:'gpa',gpa_prem:'gpa',uc_app_gpa:'gpa',
  oth_admit:'pool',ucsd_share:'pool',apps_per100:'pool',
  caaspp:'prof',star:'prof',cahsee:'prof',

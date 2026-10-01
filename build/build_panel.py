@@ -36,6 +36,12 @@ terc=pd.qcut(s,3,labels=[0,1,2]).astype(float).rename('prof_terc').reset_index()
 P=P.merge(terc,on='ceeb',how='left')
 # per-year derived
 P['ucsd_admit']=100*P.sd_adm/P.sd_app
+P['den']=P.sd_app-P.sd_adm
+P['ucsd_logodds']=np.log((P.sd_adm+0.5)/(P.den+0.5)); P.loc[P.sd_app<10,'ucsd_logodds']=np.nan
+yt=P.groupby('year').agg(A=('sd_adm','sum'),N=('sd_app','sum')); yt['lo']=np.log(yt.A/(yt.N-yt.A))
+P['ucsd_lor_year']=P.ucsd_logodds-P.year.map(yt.lo)
+P['pred_den']=P.sd_app-P.pred_adm_gpa
+P['ucsd_lor_pred']=P.ucsd_logodds-np.log((P.pred_adm_gpa+0.5)/(P.pred_den+0.5)); P.loc[P.sd_app<10,'ucsd_lor_pred']=np.nan
 P['ucsd_yield']=100*P.sd_enr/P.sd_adm
 P['ucsd_exp']=100*P.pred_adm_gpa/P.sd_app
 P['ucsd_adv']=P.ucsd_admit-P.ucsd_exp
@@ -77,6 +83,9 @@ YEARLY={ # id: (column, dec, kind) kind: rate=ratio of sums for eras (num,den) ;
  'ucsd_exp2':('ucsd_exp2',1,('pred_adm_oth','sd_app')),
  'ucsd_adv2':('ucsd_adv2',1,'adv2'),
  'ucsd_yield':('ucsd_yield',1,('sd_enr','sd_adm')),
+ 'ucsd_logodds':('ucsd_logodds',2,'lo'),
+ 'ucsd_lor_year':('ucsd_lor_year',2,'lor_year'),
+ 'ucsd_lor_pred':('ucsd_lor_pred',2,'lor_pred'),
  'ucsd_apps':('sd_app',0,'sum'),
  'ucsd_adm':('sd_adm',0,'sum'),
  'ucsd_app_gpa':('sd_app_gpa',2,'sd_app'),
@@ -102,7 +111,14 @@ for mid,(col,dec,kind) in YEARLY.items():
         vals=[d.get(c,np.nan) for c in first.ceeb]; rows.append(row_string(vals,dec))
     for (py,code,a,b,lab) in ERAS:
         e=P[P.year.between(a,b)]
-        if kind=='adv':
+        if kind in ('lo','lor_year','lor_pred'):
+            g=e.groupby('ceeb').agg(a=('sd_adm','sum'),n=('sd_app','sum'),p=('pred_adm_gpa','sum')); g=g[g.n>=10]
+            lo=np.log((g.a+0.5)/(g.n-g.a+0.5))
+            if kind=='lo': v=lo
+            elif kind=='lor_year':
+                A=e.sd_adm.sum(); Nn=e.sd_app.sum(); v=lo-np.log(A/(Nn-A))
+            else: v=lo-np.log((g.p+0.5)/(g.n-g.p+0.5))
+        elif kind=='adv':
             g=e.groupby('ceeb').agg(a=('sd_adm','sum'),p=('pred_adm_gpa','sum'),n=('sd_app','sum')); v=100*(g.a-g.p)/g.n
         elif kind=='adv2':
             g=e.groupby('ceeb').agg(a=('sd_adm','sum'),p=('pred_adm_oth','sum'),n=('sd_app','sum')); v=100*(g.a-g.p)/g.n

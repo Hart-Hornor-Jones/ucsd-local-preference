@@ -31,7 +31,7 @@ a=html.find('var MEASURES=['); b=html.find('var CTX_KEYS='); b=html.find('\n',b)
 html=html[:a]+MEAS+html[b:]
 # ---------- 4. units ----------
 rep("usd:'dollars', flag:'yes/no', stud:'students per grade', nmsf:'semifinalists', per100:'semifinalists per 100 students', nstud:'students'};",
- "usd:'dollars', flag:'yes/no', stud:'students', nstud:'students', pts:'percentage points', mi:'miles', cat:'category', seats:'seats', ratio:'applicants per seat', per100s:'applicants per 100 seniors', yrs:'years'};",'units')
+ "usd:'dollars', flag:'yes/no', stud:'students', nstud:'students', pts:'percentage points', mi:'miles', cat:'category', seats:'seats', ratio:'applicants per seat', per100s:'applicants per 100 seniors', yrs:'years', lo:'log-odds', lor:'log odds ratio'};",'units')
 # ---------- 5. defaults ----------
 rep("var st={ xid:'gpa_uc', xDelta:false, xFrom:'sel', xTo:2025,\n         yid:'uc_grad4', yDelta:false, yFrom:'sel', yTo:2025,\n         year:2020, view:'joint', colorBy:'caaspp_math',",
  "var st={ xid:'ucsd_app_gpa', xDelta:false, xFrom:'sel', xTo:2025,\n         yid:'ucsd_admit', yDelta:false, yFrom:'sel', yTo:2025,\n         year:2031, view:'joint', colorBy:'local',",'st defaults')
