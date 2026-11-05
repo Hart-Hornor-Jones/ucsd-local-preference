@@ -70,6 +70,8 @@ rep("    if(to!=='sel'&&y>=to) continue; opt(fEl,y,y,from); }","    if(to!=='sel
 rep("    if(from!=='sel'&&y2<=from) continue; opt(tEl,y2,y2,to); }","    if(from!=='sel'&&y2<=from) continue; opt(tEl,y2,yLabel(y2),to); }",'span to')
 rep("function spanWord(e){return e==='sel'?'the selected year':String(e);}","function spanWord(e){return e==='sel'?'the selected year':yLabel(e);}",'spanWord')
 rep("across schools in '+f1.xsYear+'","across schools in '+yLabel(f1.xsYear)+'",'xsYear')
+rep("    var o2=document.createElement('option'); o2.value=y; o2.textContent=y;\n    if(y===cur) o2.selected=true;\n    xsYrEl.appendChild(o2);","    var o2=document.createElement('option'); o2.value=y; o2.textContent=yLabel(y);\n    if(y===cur) o2.selected=true;\n    xsYrEl.appendChild(o2);",'xsYr option labels')
+rep("    +f.nLevel+' schools in '+f.xsYear+', drawn through the origin. '+n+' schools plotted.';","    +f.nLevel+' schools in '+yLabel(f.xsYear)+', drawn through the origin. '+n+' schools plotted.';",'xsect stats year')
 rep("    spec.axisLabel=function(sel){return m.axis;};","    spec.axisLabel=function(sel){return m.axis+(ERAS[sel]?(', '+ERAS[sel][0]):'');};",'axisLabel era')
 rep("xsel.value='gpa_uc'; ysel.value='uc_grad4';","xsel.value='ucsd_app_gpa'; ysel.value='ucsd_admit';",'init selects')
 rep("'ctx_upp','ctx_urg','ctx_tract_inc','caaspp','ag'];","'ctx_upp','ctx_lcff','gpa_prem'];",'prefs tail')

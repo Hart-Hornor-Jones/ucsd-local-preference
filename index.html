@@ -1649,7 +1649,7 @@ function trendStatsText(){
   }
   if(f.eq) return 'Mean of (Y − X): '+(f.meanDiff>=0?'+':'')+f.meanDiff.toFixed(2)+'.';
   if(f.xsect) return 'Slope '+f.slope.toFixed(3)+', from the level relationship across '
-    +f.nLevel+' schools in '+f.xsYear+', drawn through the origin. '+n+' schools plotted.';
+    +f.nLevel+' schools in '+yLabel(f.xsYear)+', drawn through the origin. '+n+' schools plotted.';
   return 'Slope '+f.slope.toFixed(3)+' per unit of X · correlation r = '+f.r.toFixed(2)+' · '+n+' schools.';
 }
 function childStatsText(k){
@@ -1670,7 +1670,7 @@ function fillXsYears(){
   for(var y=lo;y<=hi;y++){
     if(xm.skip.indexOf(y)>=0||ym.skip.indexOf(y)>=0) continue;
     if(firstOk==null) firstOk=y;
-    var o2=document.createElement('option'); o2.value=y; o2.textContent=y;
+    var o2=document.createElement('option'); o2.value=y; o2.textContent=yLabel(y);
     if(y===cur) o2.selected=true;
     xsYrEl.appendChild(o2);
   }
